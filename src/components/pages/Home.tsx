@@ -9,7 +9,7 @@ import { heroImg } from "@/assets/images/hero/image";
 import { css, useTheme } from "@emotion/react";
 import { Link } from "react-router-dom";
 import Bookmark from "../atoms/Bookmark";
-import { useState } from "react";
+// import { useState } from "react";
 
 type GetListAnimeData = {
   Page: {
@@ -59,7 +59,7 @@ const GET_LIST_ANIME = gql`
 
 const Home = () => {
   const theme = useTheme();
-  const [selectedId, setSelectedId] = useState<number[]>([]);
+  // const [selectedId, setSelectedId] = useState<number[]>([]);
   const { loading, data, error } = useQuery<GetListAnimeData>(GET_LIST_ANIME);
 
   const animatedText = css`

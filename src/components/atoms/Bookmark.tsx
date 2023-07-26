@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 
 interface IBookmarkProps {
   style?: CSSProperties;
-  item: string[];
+  item?: string[];
 }
 
 const Bookmark: React.FC<IBookmarkProps> = ({ style, item }) => {

@@ -1,5 +1,9 @@
 import { useRoutes } from "react-router-dom";
-import { Home, Collection, Details } from "@/components/pages";
+import { lazy } from "react";
+
+const Home = lazy(() => import("@/components/pages/Home"));
+const Collection = lazy(() => import("@/components/pages/Collection"));
+const Details = lazy(() => import("@/components/pages/Details"));
 
 export default function Router() {
   return useRoutes([

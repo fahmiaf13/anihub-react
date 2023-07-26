@@ -4,13 +4,16 @@ import { Loading } from "@/components/molecules";
 import { ThemeProvider } from "@emotion/react";
 import theme from "@/theme";
 import { Suspense } from "react";
+import { CartProvider } from "@/context/CartContext";
 
 function App() {
   return (
     <Suspense fallback={<Loading />}>
       <HelmetProvider>
         <ThemeProvider theme={theme}>
-          <Router />
+          <CartProvider>
+            <Router />
+          </CartProvider>
         </ThemeProvider>
       </HelmetProvider>
     </Suspense>

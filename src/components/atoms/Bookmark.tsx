@@ -7,7 +7,7 @@ interface IBookmarkProps {
   item?: string[];
 }
 
-const Bookmark: React.FC<IBookmarkProps> = ({ style, item }) => {
+const Bookmark: React.FC<IBookmarkProps> = ({ style }) => {
   const [isMarked, setIsMarked] = useState<boolean>(false);
 
   const handleClick = useCallback(() => {

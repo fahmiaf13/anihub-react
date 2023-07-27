@@ -7,7 +7,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
 }
 
-const Button: React.FC<IButtonProps> = ({ onClick, children, fullWidth, ...rest }) => {
+const Button: React.FC<IButtonProps> = ({ onClick, children, fullWidth, variant = "primary", ...rest }) => {
   const theme = useTheme();
 
   return (
@@ -18,8 +18,19 @@ const Button: React.FC<IButtonProps> = ({ onClick, children, fullWidth, ...rest 
         border: none;
         cursor: pointer;
         outline: none;
-        background-color: ${theme.colors.neon};
         width: ${fullWidth && "100%"};
+        transition: background-color 0.3s ease;
+
+        ${variant === "primary" &&
+        `background-color: ${theme.colors.neon};
+         color: ${theme.colors.secondary};
+         border: ${theme.colors.neon} solid 2px;
+        
+        &:hover {
+          border: ${theme.colors.neon} solid 2px;
+          color: ${theme.colors.neon};
+          background-color: transparent;
+        }`}
       `}
       onClick={onClick}
     >

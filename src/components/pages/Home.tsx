@@ -84,7 +84,7 @@ const Home = () => {
         <Stack>
           <Stack justify="flex-end" align="center" style={{ paddingTop: "10rem" }}>
             <Typography align="center" weight={800} font="mont" size="6xl">
-              Explore the Fascinating World of <br /> <span css={animatedText}>Anime</span>& <span css={animatedText}>Manga</span>
+              Explore the Fascinating World of <br /> <span css={animatedText}>Anime</span> & <span css={animatedText}>Manga</span>
             </Typography>
             <Typography weight={200} align="center" size="xl">
               Your Ultimate Anime Sharing Platform
@@ -121,39 +121,44 @@ const Home = () => {
 
       <section style={{ minHeight: "100vh", width: "100%" }}>
         <Container>
-          <Typography weight={800} font="mont" size="3xl" align="center">
-            ANIME
+          <Typography align="center" size="5xl" font="mont" weight={800}>
+            What to Watch
           </Typography>
-          <Stack align="center">
-            <Grid container lg={10} spacing={12} direction="row">
-              {medias?.map((media, index) => (
-                <Card key={index} style={{ position: "relative" }}>
-                  <Stack direction="column" style={{ padding: "0.3rem" }}>
-                    <div style={{ height: "200px" }}>
-                      <img style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "17px" }} src={media.coverImage.large} alt={`test`} />
-                    </div>
-                    <Stack>
-                      <Typography size="base" align="center" weight={800}>
-                        {media.title.english || media.title.romaji || media.title.native}
-                      </Typography>
-                      <Stack justify="flex-end">
-                        <Link to={`/details/${media.id}`}>
-                          <Button fullWidth style={{ borderRadius: "10px" }}>
-                            <Typography align="center" size="sm" weight={900}>
-                              See More
-                            </Typography>
-                          </Button>
-                        </Link>
+          <Container style={{ marginTop: "3rem" }}>
+            <Typography weight={800} font="mont" size="3xl" align="center">
+              ANIME
+            </Typography>
+            <Stack align="center">
+              <Grid container lg={10} spacing={12} direction="row">
+                {medias?.map((media, index) => (
+                  <Card key={index} style={{ position: "relative" }}>
+                    <Stack direction="column" style={{ padding: "0.3rem" }}>
+                      <div style={{ height: "200px" }}>
+                        <img style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "17px" }} src={media.coverImage.large} alt={`test`} />
+                      </div>
+                      <Stack>
+                        <Typography size="base" align="center" weight={800}>
+                          {media.title.english || media.title.romaji || media.title.native}
+                        </Typography>
+                        <Stack justify="flex-end">
+                          <Link to={`/details/${media.id}`}>
+                            <Button variant="primary" fullWidth style={{ borderRadius: "10px" }}>
+                              <Typography align="center" size="sm" weight={900}>
+                                See More
+                              </Typography>
+                            </Button>
+                          </Link>
+                        </Stack>
                       </Stack>
                     </Stack>
-                  </Stack>
-                  <Bookmark
-                    style={{ zIndex: 10, position: "absolute", top: 20, right: 20, backgroundColor: `${theme.colors.primary}`, width: 30, height: 30, borderRadius: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
-                  />
-                </Card>
-              ))}
-            </Grid>
-          </Stack>
+                    <Bookmark
+                      style={{ zIndex: 10, position: "absolute", top: 20, right: 20, backgroundColor: `${theme.colors.primary}`, width: 30, height: 30, borderRadius: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
+                    />
+                  </Card>
+                ))}
+              </Grid>
+            </Stack>
+          </Container>
         </Container>
       </section>
     </Template>

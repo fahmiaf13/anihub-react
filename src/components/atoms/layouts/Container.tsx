@@ -1,14 +1,17 @@
 import React from "react";
 import { css } from "@emotion/react";
+import { CSSProperties } from "react";
 
 interface IContainerProps {
   maxWidth?: string;
   children: React.ReactNode;
+  style?: CSSProperties;
 }
 
-const Container: React.FC<IContainerProps> = ({ maxWidth = "lg", children }) => {
+const Container: React.FC<IContainerProps> = ({ maxWidth = "lg", children, style }) => {
   return (
     <div
+      style={style}
       css={css`
         margin: 0 auto;
         max-width: ${getMaxWidthValue(maxWidth)};

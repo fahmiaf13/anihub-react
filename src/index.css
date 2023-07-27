@@ -18,7 +18,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Font dengan variasi weight thin */
+a {
+  all: unset;
+  cursor: pointer;
+}
+
 @font-face {
   font-family: "Mont";
   src: url("./assets/fonts/Mont-Heavy.otf") format("otf");

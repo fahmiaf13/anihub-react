@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { Template } from "@/components/templates";
 import { Loading } from "@/components/molecules";
-import Cardss from "../molecules/Cardss";
 
 type GetDetailAnime = {
   Media: {
@@ -42,12 +41,7 @@ const Collection = () => {
 
   const medias = data?.Media;
 
-  return (
-    <Template title={medias?.title.english}>
-      {medias?.title.english || medias?.title?.romaji || medias?.title?.native}
-      <Cardss />
-    </Template>
-  );
+  return <Template title={medias?.title.english}>{medias?.title.english || medias?.title?.romaji || medias?.title?.native}</Template>;
 };
 
 export default Collection;

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { Template } from "@/components/templates";
-import { Loading } from "@/components/molecules";
+import { Loading, Error } from "@/components/molecules";
 import { Box, Container, Stack, Typography } from "@/components/atoms";
 import { css, useTheme } from "@emotion/react";
 
@@ -49,7 +49,7 @@ const Details = () => {
   });
 
   if (loading) return <Loading />;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) return <Error />;
 
   const medias = data?.Media;
 

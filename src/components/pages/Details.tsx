@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { Template } from "@/components/templates";
 import { Loading } from "@/components/molecules";
-import { Box, Stack, Typography } from "@/components/atoms";
+import { Box, Container, Stack, Typography } from "@/components/atoms";
 import { css, useTheme } from "@emotion/react";
 
 type GetDetailAnime = {
@@ -93,25 +93,27 @@ const Details = () => {
               color: ${theme.colors.primary};
             `}
           >
-            <Stack direction="row" spacing={30} align="center">
-              <img
-                src={medias?.coverImage.extraLarge}
-                css={css`
-                  border-radius: 17px;
-                  height: 400px;
-                  margin-left: 5rem;
-                `}
-              />
-              <Box style={{ paddingInlineEnd: "3rem", width: "100% " }}>
-                <Typography font="mont" weight={800} size="4xl">
-                  {medias?.title.english || medias?.title.romaji}
-                </Typography>
-                <Typography weight={300} size="4xl">
-                  {medias?.title.native}
-                </Typography>
-                <Typography>{medias?.description}</Typography>
-              </Box>
-            </Stack>
+            <Container maxWidth="lg" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+              <Stack direction="row" spacing={30} align="center">
+                <img
+                  src={medias?.coverImage.extraLarge}
+                  css={css`
+                    border-radius: 17px;
+                    height: 400px;
+                    margin-left: 5rem;
+                  `}
+                />
+                <Box style={{ paddingInlineEnd: "3rem", width: "100% " }}>
+                  <Typography font="mont" weight={800} size="4xl">
+                    {medias?.title.english || medias?.title.romaji}
+                  </Typography>
+                  <Typography weight={300} size="4xl">
+                    {medias?.title.native}
+                  </Typography>
+                  <Typography>{medias?.description}</Typography>
+                </Box>
+              </Stack>
+            </Container>
           </div>
         </Stack>
       </section>

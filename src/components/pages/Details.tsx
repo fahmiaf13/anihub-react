@@ -99,7 +99,7 @@ const Details = () => {
                 css={css`
                   border-radius: 17px;
                   height: 400px;
-                  margin-left: 3rem;
+                  margin-left: 5rem;
                 `}
               />
               <Box style={{ paddingInlineEnd: "3rem", width: "100% " }}>

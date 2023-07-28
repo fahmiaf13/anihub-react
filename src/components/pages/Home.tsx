@@ -68,11 +68,11 @@ const Home = () => {
     color: #333;
     padding: 0.5rem;
     transition: all 0.5s ease-out;
-
     &:hover {
       background-color: ${theme.colors.neon};
       -webkit-transform: translate2d(2rem, 2rem);
     }
+    ""
   `;
 
   if (loading) return <Loading />;
@@ -83,7 +83,13 @@ const Home = () => {
     <Template>
       <section style={{ height: "100vh", width: "100%" }}>
         <Stack>
-          <Stack justify="flex-end" align="center" style={{ paddingTop: "10rem" }}>
+          <Stack
+            justify="flex-end"
+            align="center"
+            sx={css`
+              padding-top: 10rem;
+            `}
+          >
             <Typography align="center" weight={800} font="mont" size="6xl">
               Explore the Fascinating World of <br /> <span css={animatedText}>Anime</span> & <span css={animatedText}>Manga</span>
             </Typography>
@@ -91,10 +97,17 @@ const Home = () => {
               Your Ultimate Anime Sharing Platform
             </Typography>
             <Grid>
-              <Button>Explore</Button>
+              <Button>
+                <Typography>Explore</Typography>
+              </Button>
             </Grid>
           </Stack>
-          <Stack justify="flex-end" style={{ paddingBlock: "3rem" }}>
+          <Stack
+            justify="flex-end"
+            sx={css`
+              padding-block: "3rem";
+            `}
+          >
             <Carousel>
               {heroImg.map((hero, index) => (
                 <div key={index}>
@@ -111,7 +124,15 @@ const Home = () => {
                       }
                     `}
                   >
-                    <img style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "17px" }} src={hero.src} />
+                    <img
+                      css={css`
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: 17px;
+                      `}
+                      src={hero.src}
+                    />
                   </div>
                 </div>
               ))}
@@ -125,7 +146,11 @@ const Home = () => {
           <Typography align="center" size="5xl" font="mont" weight={800}>
             What to Watch
           </Typography>
-          <Container style={{ marginTop: "3rem" }}>
+          <Container
+            sx={css`
+              margin-top: 3rem;
+            `}
+          >
             <Typography weight={800} font="mont" size="3xl" align="center">
               ANIME
             </Typography>
@@ -133,16 +158,35 @@ const Home = () => {
               <Grid container lg={10} spacing={12} direction="row">
                 {medias?.map((media, index) => {
                   const isBookmarked = bookmarkedCollections.some((c) => c.id == media.id);
+
                   const handleBookmarkClick = () => {
                     if (isBookmarked) {
-                      removeFromCollection(media);
+                      removeFromCollection({
+                        id: media?.id,
+                        title: media?.title,
+                        coverImage: media?.coverImage,
+                      });
                     } else {
-                      addToCollection(media);
+                      addToCollection({
+                        id: media?.id,
+                        title: media?.title,
+                        coverImage: media?.coverImage,
+                      });
                     }
                   };
                   return (
-                    <Card key={index} style={{ position: "relative" }}>
-                      <Stack direction="column" style={{ padding: "0.3rem" }}>
+                    <Card
+                      key={index}
+                      sx={css`
+                        position: relative;
+                      `}
+                    >
+                      <Stack
+                        direction="column"
+                        sx={css`
+                          padding: 0.3rem;
+                        `}
+                      >
                         <div style={{ height: "200px" }}>
                           <img style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "17px" }} src={media.coverImage.large} alt={`test`} />
                         </div>
@@ -152,8 +196,8 @@ const Home = () => {
                           </Typography>
                           <Stack justify="flex-end">
                             <Link to={`/details/${media.id}`}>
-                              <Button variant="primary" fullWidth style={{ borderRadius: "10px" }}>
-                                <Typography align="center" size="sm" weight={900}>
+                              <Button variant="secondary" fullWidth style={{ borderRadius: "10px" }}>
+                                <Typography align="center" size="sm" weight={500}>
                                   See More
                                 </Typography>
                               </Button>

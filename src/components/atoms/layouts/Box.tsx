@@ -1,6 +1,5 @@
 import React from "react";
-import { css } from "@emotion/react";
-import { CSSProperties } from "react";
+import { css, SerializedStyles } from "@emotion/react";
 
 interface IBoxProps {
   display?: string;
@@ -11,13 +10,12 @@ interface IBoxProps {
   backgroundColor?: string;
   color?: string;
   children: React.ReactNode;
-  style: CSSProperties;
+  sx?: SerializedStyles;
 }
 
-const Box: React.FC<IBoxProps> = ({ display = "block", width, height, margin, padding, backgroundColor, color, children, style }) => {
+const Box: React.FC<IBoxProps> = ({ sx, display = "block", width, height, margin, padding, backgroundColor, color, children }) => {
   return (
     <div
-      style={style}
       css={css`
         display: ${display};
         width: ${width};
@@ -26,6 +24,7 @@ const Box: React.FC<IBoxProps> = ({ display = "block", width, height, margin, pa
         padding: ${padding};
         background-color: ${backgroundColor};
         color: ${color};
+        ${sx}
       `}
     >
       {children}

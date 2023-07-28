@@ -40,16 +40,44 @@ const Navbar = () => {
         transition: background-color 0.3s ease;
       `}
     >
-      <Container maxWidth="lg" style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-        <Stack direction="row" align="center" justify="space-between" style={{ width: "100%", padding: "2rem 5rem" }}>
-          <Stack style={{ backgroundColor: `${theme.colors.white}`, padding: "1rem 1.5rem", borderRadius: "40px" }} direction="row">
+      <Container
+        maxWidth="lg"
+        sx={css`
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+        `}
+      >
+        <Stack
+          direction="row"
+          align="center"
+          justify="space-between"
+          sx={css`
+            width: 100%;
+            padding: 2rem 5rem;
+          `}
+        >
+          <Stack
+            sx={css`
+              background-color: ${theme.colors.white};
+              padding: 1rem 1.5rem;
+              border-radius: 40px;
+            `}
+            direction="row"
+          >
             <img
               src={Logo}
               css={css`
                 width: 24px;
               `}
             />
-            <Stack direction="row" style={{ marginLeft: "1rem" }} spacing={12}>
+            <Stack
+              direction="row"
+              sx={css`
+                margin-left: 1rem;
+              `}
+              spacing={12}
+            >
               <Link to="/">
                 <Typography size="lg">Home</Typography>
               </Link>
@@ -61,7 +89,14 @@ const Navbar = () => {
               </Link>
             </Stack>
           </Stack>
-          <Stack style={{ backgroundColor: `${theme.colors.white}`, padding: "1rem 1rem", borderRadius: "40px" }} direction="row">
+          <Stack
+            sx={css`
+              background-color: ${theme.colors.white};
+              padding: 1rem 1rem;
+              border-radius: 40px;
+            `}
+            direction="row"
+          >
             <Icon icon="bi:bookmark-heart-fill" width={24} color={theme.colors.danger} />
           </Stack>
         </Stack>

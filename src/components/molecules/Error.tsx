@@ -2,6 +2,7 @@ import Lottie from "lottie-react";
 import ErrorIcon from "@/assets/images/error.json";
 import { Button, Stack, Typography } from "@/components/atoms";
 import { Link } from "react-router-dom";
+import { css } from "@emotion/react";
 
 const Error = () => {
   const style = {
@@ -10,7 +11,15 @@ const Error = () => {
   };
   return (
     <div css={{ position: "fixed", top: "0", left: "0" }}>
-      <Stack justify="center" align="center" style={{ backgroundColor: "#fff", width: "100vw", height: "100vh" }}>
+      <Stack
+        justify="center"
+        align="center"
+        sx={css`
+          backgroundcolor: #fff;
+          width: 100vw;
+          height: 100vh;
+        `}
+      >
         <Typography font="mont" weight={800} size="5xl">
           Page not found!
         </Typography>

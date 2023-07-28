@@ -1,5 +1,5 @@
 :root {
-  font-family: "Plus Jakarta Sans", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Outfit";
   font-weight: 400;
 
   /* color-scheme: light dark; */
@@ -30,43 +30,7 @@ a {
 }
 
 @font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("./assets/fonts/PlusJakartaSans-ExtraLight.ttf") format("ttf");
-  font-weight: 200;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("./assets/fonts/PlusJakartaSans-Light.ttf") format("ttf");
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("./assets/fonts/PlusJakartaSans-Regular.ttf") format("ttf");
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("./assets/fonts/PlusJakartaSans-Medium.ttf") format("ttf");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("./assets/fonts/PlusJakartaSans-SemiBold.ttf") format("ttf");
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("./assets/fonts/PlusJakartaSans-Bold.ttf") format("ttf");
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("./assets/fonts/PlusJakartaSans-ExtraBold.ttf") format("ttf");
-  font-weight: 800;
+  font-family: "Outfir";
+  src: url("./assets/fonts/Outfit-Reguler.ttf") format("ttf");
+  font-weight: 4s00;
 }

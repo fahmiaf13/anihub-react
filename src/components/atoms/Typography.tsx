@@ -1,5 +1,4 @@
-import { css } from "@emotion/react";
-import { CSSProperties } from "react";
+import { css, SerializedStyles } from "@emotion/react";
 
 type TFontSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl" | "9xl";
 
@@ -9,18 +8,18 @@ interface ITypographyProps {
   size?: TFontSize;
   children: React.ReactNode | string;
   align?: "center" | "left" | "right" | "justify";
-  style?: CSSProperties;
+  sx?: SerializedStyles;
 }
 
-const Typography: React.FC<ITypographyProps> = ({ style, font = "Plus Jakarta Sans", weight = 400, children, size = "base", align = "left" }) => {
+const Typography: React.FC<ITypographyProps> = ({ sx, font = "Outfit", weight = 400, children, size = "base", align = "left" }) => {
   return (
     <div
-      style={style}
       css={css`
         font-family: ${font}, sans-serif;
         font-weight: ${weight};
         font-size: ${getFontSize(size)};
         text-align: ${align};
+        ${sx}
       `}
     >
       {children}

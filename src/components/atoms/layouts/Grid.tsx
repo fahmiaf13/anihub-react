@@ -1,6 +1,5 @@
 import React from "react";
-import { css } from "@emotion/react";
-import { CSSProperties } from "react";
+import { css, SerializedStyles } from "@emotion/react";
 
 interface IGridProps {
   container?: boolean;
@@ -16,7 +15,7 @@ interface IGridProps {
   lg?: number;
   xl?: number;
   children: React.ReactNode;
-  style?: CSSProperties;
+  sx?: SerializedStyles;
 }
 
 type Breakpoints = {
@@ -27,10 +26,9 @@ type Breakpoints = {
   xl: number;
 };
 
-const Grid: React.FC<IGridProps> = ({ container = false, spacing = 0, direction = "row", alignContent = "stretch", alignItems = "stretch", justifyContent = "flex-start", wrap = "wrap", xs, sm, md, lg, xl, children, style }) => {
+const Grid: React.FC<IGridProps> = ({ container = false, spacing = 0, direction = "row", alignContent = "stretch", alignItems = "stretch", justifyContent = "flex-start", wrap = "wrap", xs, sm, md, lg, xl, children, sx }) => {
   return (
     <div
-      style={style}
       css={css`
         display: ${container ? "flex" : "block"};
         flex-direction: ${direction};
@@ -39,7 +37,7 @@ const Grid: React.FC<IGridProps> = ({ container = false, spacing = 0, direction 
         justify-content: ${justifyContent};
         flex-wrap: ${wrap};
         gap: ${spacing}px;
-
+        ${sx}
         ${xs && getBreakpointCSS("xs", xs)}
         ${sm && getBreakpointCSS("sm", sm)}
         ${md && getBreakpointCSS("md", md)}

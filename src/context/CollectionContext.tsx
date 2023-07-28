@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 
-export interface Collection {
+export interface ICollection {
   id: number;
   coverImage: {
     large: string;
@@ -13,9 +13,9 @@ export interface Collection {
 }
 
 interface CollectionContextValue {
-  bookmarkedCollections: Collection[];
-  addToCollection: (collection: Collection) => void;
-  removeFromCollection: (collection: Collection) => void;
+  bookmarkedCollections: ICollection[];
+  addToCollection: (collection: ICollection) => void;
+  removeFromCollection: (collection: ICollection) => void;
 }
 
 export const CollectionContext = createContext<CollectionContextValue>({
@@ -29,7 +29,7 @@ interface ICollectionProvider {
 }
 
 const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
-  const [bookmarkedCollections, setBookmarkedCollections] = useState<Collection[]>(() => {
+  const [bookmarkedCollections, setBookmarkedCollections] = useState<ICollection[]>(() => {
     // Load bookmarked collections from localStorage on component mount
     const storedCollections = localStorage.getItem("bookmarkedCollections");
     return storedCollections ? JSON.parse(storedCollections) : [];
@@ -40,7 +40,7 @@ const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
     localStorage.setItem("bookmarkedCollections", JSON.stringify(bookmarkedCollections));
   }, [bookmarkedCollections]);
 
-  const addToCollection = (collection: Collection) => {
+  const addToCollection = (collection: ICollection) => {
     setBookmarkedCollections((prevCollections) => {
       const collectionIds = prevCollections.map((c) => c.id);
       if (!collectionIds.includes(collection.id)) {
@@ -50,7 +50,7 @@ const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
     });
   };
 
-  const removeFromCollection = (collection: Collection) => {
+  const removeFromCollection = (collection: ICollection) => {
     setBookmarkedCollections((prevCollections) => prevCollections.filter((c) => c.id !== collection.id));
   };
 

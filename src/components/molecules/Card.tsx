@@ -1,16 +1,14 @@
-import { css } from "@emotion/react";
-import { CSSProperties } from "react";
+import { css, SerializedStyles } from "@emotion/react";
 
 interface ICardProps {
   elevation?: number;
   children: React.ReactNode;
-  style?: CSSProperties;
+  sx?: SerializedStyles;
 }
 
-const Card: React.FC<ICardProps> = ({ elevation = 1, children, style }) => {
+const Card: React.FC<ICardProps> = ({ elevation = 1, children, sx }) => {
   return (
     <div
-      style={style}
       css={css`
         width: 185px;
         height: 320px;
@@ -18,6 +16,7 @@ const Card: React.FC<ICardProps> = ({ elevation = 1, children, style }) => {
         background: #f5f5f5;
         border-radius: 20px;
         elevation: ${elevation};
+        ${sx}
       `}
     >
       {children}

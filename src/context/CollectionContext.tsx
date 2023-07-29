@@ -30,12 +30,10 @@ interface ICollectionProvider {
 
 const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
   const [bookmarkedCollections, setBookmarkedCollections] = useState<ICollection[]>(() => {
-    // Load bookmarked collections from localStorage on component mount
     const storedCollections = localStorage.getItem("bookmarkedCollections");
     return storedCollections ? JSON.parse(storedCollections) : [];
   });
 
-  // Save bookmarked collections to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("bookmarkedCollections", JSON.stringify(bookmarkedCollections));
   }, [bookmarkedCollections]);

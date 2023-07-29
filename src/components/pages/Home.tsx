@@ -3,22 +3,25 @@ import { useQuery, gql } from "@apollo/client";
 import { Container, Grid, Stack } from "@/components/atoms/layouts";
 import { Button, Typography } from "@/components/atoms";
 import { Template } from "@/components/templates";
-import { Card, Carousel, Loading } from "@/components/molecules";
+import { Card, Carousel, Loading, Modal, Pagination } from "@/components/molecules";
 // IMAGE
 import { heroImg } from "@/assets/images/hero/image";
 import { css, useTheme } from "@emotion/react";
 import { Link } from "react-router-dom";
 import { CollectionContext } from "@/context/CollectionContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Icon } from "@iconify/react";
+// import { Tab, Tabs } from "../atoms/tabs";
+import Tab from "../atoms/Tabs";
 
 type GetListAnimeData = {
   Page: {
     pageInfo: {
       total: number;
-      perPage: number;
-      lastPage: number;
       currentPage: number;
+      lastPage: number;
+      hasNextPage: boolean;
+      perPage: number;
     };
     media: {
       id: number;
@@ -35,13 +38,14 @@ type GetListAnimeData = {
 };
 
 const GET_LIST_ANIME = gql`
-  query GetList {
-    Page(page: 10, perPage: 10) {
+  query GetList($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
       pageInfo {
         total
-        perPage
-        lastPage
         currentPage
+        lastPage
+        hasNextPage
+        perPage
       }
       media(type: ANIME) {
         id
@@ -60,8 +64,25 @@ const GET_LIST_ANIME = gql`
 
 const Home = () => {
   const theme = useTheme();
-  const { loading, data, error } = useQuery<GetListAnimeData>(GET_LIST_ANIME);
+  const [page, setPage] = useState<number>(1);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [groupName, setGroupName] = useState<string>("");
+  const { loading, data, error } = useQuery<GetListAnimeData>(GET_LIST_ANIME, { variables: { page, perPage: 10 } });
   const { addToCollection, bookmarkedCollections, removeFromCollection } = useContext(CollectionContext);
+
+  // const handleAddToExistingGroup = (group: Collection) => {
+  //   addToCollection({ ...selectedCollection, group: group.title.english });
+  //   closeModal();
+  // };
+
+  // const handleAddToNewGroup = () => {
+  //   addToCollection({ ...selectedCollection, group: newGroupName });
+
+  // };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   const animatedText = css`
     background-color: transparent;
@@ -72,12 +93,12 @@ const Home = () => {
       background-color: ${theme.colors.neon};
       -webkit-transform: translate2d(2rem, 2rem);
     }
-    ""
   `;
 
   if (loading) return <Loading />;
   if (error) return <p>Error: {error.message}</p>;
   const medias = data?.Page.media;
+  const pageInfo = data?.Page?.pageInfo;
 
   return (
     <Template>
@@ -158,7 +179,6 @@ const Home = () => {
               <Grid container lg={10} spacing={12} direction="row">
                 {medias?.map((media, index) => {
                   const isBookmarked = bookmarkedCollections.some((c) => c.id == media.id);
-
                   const handleBookmarkClick = () => {
                     if (isBookmarked) {
                       removeFromCollection({
@@ -226,6 +246,49 @@ const Home = () => {
                   );
                 })}
               </Grid>
+              <button onClick={() => setIsModalOpen(true)}>open modal</button>
+              {/* MODAL COMPONENT */}
+              <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <Typography weight={800} size="3xl">
+                  Collection
+                </Typography>
+                <div
+                  css={css`
+                    width: 500px;
+                    height: 500px;
+                  `}
+                >
+                  <Tab>
+                    <Tab.Panel label="Add to collection">
+                      <Typography>Add to collection</Typography>
+                    </Tab.Panel>
+                    <Tab.Panel label="Create a new collection">
+                      <Typography>Create a new collection</Typography>
+                      <input type="text" placeholder="group name" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
+                      <Stack direction="row">
+                        <Button
+                          fullWidth
+                          sx={css`
+                            border-radius: 10px;
+                          `}
+                        >
+                          <Typography align="center">Batal</Typography>
+                        </Button>
+                        <Button
+                          sx={css`
+                            border-radius: 10px;
+                          `}
+                          fullWidth
+                        >
+                          <Typography align="center">Buat</Typography>
+                        </Button>
+                      </Stack>
+                    </Tab.Panel>
+                  </Tab>
+                </div>
+              </Modal>
+              {/* ================ */}
+              {pageInfo && <Pagination pageInfo={pageInfo} onPageChange={handlePageChange} />}
             </Stack>
           </Container>
         </Container>

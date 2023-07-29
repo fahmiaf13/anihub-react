@@ -33,7 +33,7 @@ const Navbar = () => {
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 1000;
+        z-index: 100;
         width: 100vw;
         background-color: ${scrolled ? theme.colors.white : "transparent"};
         display: flex;
@@ -65,12 +65,14 @@ const Navbar = () => {
             `}
             direction="row"
           >
-            <img
-              src={Logo}
-              css={css`
-                width: 24px;
-              `}
-            />
+            <Link to="/">
+              <img
+                src={Logo}
+                css={css`
+                  width: 24px;
+                `}
+              />
+            </Link>
             <Stack
               direction="row"
               sx={css`
@@ -97,7 +99,9 @@ const Navbar = () => {
             `}
             direction="row"
           >
-            <Icon icon="bi:bookmark-heart-fill" width={24} color={theme.colors.danger} />
+            <Link to="/collection/1">
+              <Icon icon="bi:bookmark-heart-fill" width={24} color={theme.colors.danger} />
+            </Link>
           </Stack>
         </Stack>
       </Container>

@@ -1,12 +1,21 @@
 import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { Template } from "@/components/templates";
-import { Loading, Error } from "@/components/molecules";
+import { Loading, Error, Carousel } from "@/components/molecules";
 import { Box, Container, Stack, Typography } from "@/components/atoms";
 import { css, useTheme } from "@emotion/react";
 import { ICollection, CollectionContext } from "@/context/CollectionContext";
 import { useContext, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
+
+type CharactersType = {
+  image: {
+    medium: string;
+  };
+  name: {
+    full: string;
+  };
+};
 
 type GetDetailAnime = {
   Media: {
@@ -20,6 +29,9 @@ type GetDetailAnime = {
     coverImage: {
       large: string;
       extraLarge: string;
+    };
+    characters: {
+      nodes: CharactersType[];
     };
     bannerImage: string;
   };
@@ -40,6 +52,16 @@ const GET_DETAIL_ANIME = gql`
         extraLarge
       }
       bannerImage
+      characters {
+        nodes {
+          image {
+            medium
+          }
+          name {
+            full
+          }
+        }
+      }
     }
   }
 `;
@@ -54,6 +76,8 @@ const Details = () => {
   });
 
   const medias = data?.Media;
+  const characters: CharactersType[] = data?.Media?.characters?.nodes ?? [];
+
   const collectionPayload: ICollection = {
     id: medias?.id ?? 0,
     title: {
@@ -87,7 +111,7 @@ const Details = () => {
       <section
         css={css`
           min-height: 100vh;
-          maxwidth: 100vw;
+          max-width: 100vw;
         `}
       >
         <Stack
@@ -125,7 +149,7 @@ const Details = () => {
               width: 100vw;
               height: 100%;
               position: absolute;
-              z-index: 100;
+              z-index: 20;
               top: 0;
               left: 0;
               right: 0;
@@ -187,15 +211,69 @@ const Details = () => {
                   <Typography font="mont" weight={800} size="4xl">
                     {medias?.title.english || medias?.title.romaji}
                   </Typography>
-                  <Typography weight={300} size="4xl">
+                  <Typography weight={300} size="2xl">
                     {medias?.title.native}
                   </Typography>
-                  <Typography>{medias?.description}</Typography>
+                  <Typography>
+                    <p dangerouslySetInnerHTML={{ __html: medias?.description ?? "" }} />
+                  </Typography>
                 </Box>
               </Stack>
             </Container>
           </div>
         </Stack>
+        <Container>
+          <Stack>
+            <Typography
+              font="mont"
+              weight={800}
+              size="4xl"
+              sx={css`
+                padding-block: 3rem;
+              `}
+            >
+              Characters
+            </Typography>
+            <Carousel>
+              {characters?.map((char, index) => (
+                <div key={index}>
+                  <div
+                    css={css`
+                      width: 150px;
+                      height: 200px;
+                      border: 3px solid ${theme.colors.secondary};
+                      border-radius: 20px;
+                      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+                      transition: box-shadow 0.3s ease;
+                      &:hover {
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.12);
+                      }
+                    `}
+                  >
+                    <img
+                      css={css`
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: 17px;
+                      `}
+                      src={char?.image?.medium}
+                    />
+                    <Typography
+                      align="center"
+                      weight={300}
+                      sx={css`
+                        padding-block: 1rem;
+                      `}
+                    >
+                      {char?.name.full}
+                    </Typography>
+                  </div>
+                </div>
+              ))}
+            </Carousel>
+          </Stack>
+        </Container>
       </section>
     </Template>
   );

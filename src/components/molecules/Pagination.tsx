@@ -1,56 +1,60 @@
 import React from "react";
 import { css } from "@emotion/react";
 
-interface PaginationProps {
-  totalItems: number;
-  itemsPerPage: number;
+interface PageInfo {
+  total: number;
   currentPage: number;
-  onPageChange: (pageNumber: number) => void;
+  lastPage: number;
+  hasNextPage: boolean;
+  perPage: number;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+interface PaginationProps {
+  pageInfo: PageInfo;
+  onPageChange: (page: number) => void;
+}
 
-  const handlePageChange = (pageNumber: number) => {
-    onPageChange(pageNumber);
+const Pagination: React.FC<PaginationProps> = ({ pageInfo, onPageChange }) => {
+  const handlePageChange = (newPage: number) => {
+    onPageChange(newPage);
   };
 
-  const paginationStyles = css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+  const generatePageNumbers = () => {
+    const maxVisiblePages = 5;
+    const pageNumbers = [];
+    const startPage = Math.max(1, pageInfo?.currentPage - Math.floor(maxVisiblePages / 2));
+    const endPage = Math.min(pageInfo?.lastPage, startPage + maxVisiblePages - 1);
 
-    button {
-      padding: 8px 12px;
-      margin: 0 5px;
-      background-color: #f1f1f1;
-      border: 1px solid #ccc;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #e2e2e2;
-      }
-
-      &[disabled] {
-        pointer-events: none;
-        opacity: 0.5;
-      }
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
     }
-  `;
+    return pageNumbers;
+  };
 
   return (
-    <div css={paginationStyles}>
-      <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-        Previous
+    <div
+      css={css`
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+
+        button {
+          margin: 0 5px;
+        }
+      `}
+    >
+      <button onClick={() => handlePageChange(pageInfo?.currentPage - 1)} disabled={pageInfo?.currentPage === 1}>
+        Sebelumnya
       </button>
-      {Array.from({ length: totalPages }, (_, index) => (
-        <button key={index + 1} onClick={() => handlePageChange(index + 1)} disabled={currentPage === index + 1}>
-          {index + 1}
+      {generatePageNumbers().map((pageNumber) => (
+        <button key={pageNumber} onClick={() => handlePageChange(pageNumber)} disabled={pageInfo?.currentPage === pageNumber}>
+          {pageNumber}
         </button>
       ))}
-      <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-        Next
+
+      <button onClick={() => handlePageChange(pageInfo?.currentPage + 1)} disabled={!pageInfo?.hasNextPage}>
+        Selanjutnya
       </button>
     </div>
   );

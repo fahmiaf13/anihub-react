@@ -11,6 +11,7 @@ const Carousel: React.FC<ICarouselProps> = ({ children }) => {
   const settings = {
     dots: false,
     infinite: true,
+    arrows: false,
     slidesToShow: 8,
     slidesToScroll: 1,
     autoplay: true,

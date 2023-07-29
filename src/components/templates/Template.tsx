@@ -18,7 +18,7 @@ const Template = (props: ITemplateProps) => {
       </Helmet>
       <Navbar />
       <>{children}</>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

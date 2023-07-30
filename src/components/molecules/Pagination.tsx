@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@/components/atoms";
 import { css } from "@emotion/react";
 
 interface PageInfo {
@@ -38,24 +39,52 @@ const Pagination: React.FC<PaginationProps> = ({ pageInfo, onPageChange }) => {
         justify-content: center;
         align-items: center;
         margin-top: 10px;
-
-        button {
-          margin: 0 5px;
-        }
+        gap: 5px;
       `}
     >
-      <button onClick={() => handlePageChange(pageInfo?.currentPage - 1)} disabled={pageInfo?.currentPage === 1}>
+      <Button
+        variant="secondary"
+        sx={css`
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        `}
+        onClick={() => handlePageChange(pageInfo?.currentPage - 1)}
+        disabled={pageInfo?.currentPage === 1}
+      >
         Sebelumnya
-      </button>
+      </Button>
       {generatePageNumbers().map((pageNumber) => (
-        <button key={pageNumber} onClick={() => handlePageChange(pageNumber)} disabled={pageInfo?.currentPage === pageNumber}>
+        <Button
+          variant="secondary"
+          sx={css`
+            &:disabled {
+              opacity: 0.5;
+              cursor: not-allowed;
+            }
+          `}
+          key={pageNumber}
+          onClick={() => handlePageChange(pageNumber)}
+          disabled={pageInfo?.currentPage === pageNumber}
+        >
           {pageNumber}
-        </button>
+        </Button>
       ))}
 
-      <button onClick={() => handlePageChange(pageInfo?.currentPage + 1)} disabled={!pageInfo?.hasNextPage}>
+      <Button
+        variant="secondary"
+        sx={css`
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        `}
+        onClick={() => handlePageChange(pageInfo?.currentPage + 1)}
+        disabled={!pageInfo?.hasNextPage}
+      >
         Selanjutnya
-      </button>
+      </Button>
     </div>
   );
 };

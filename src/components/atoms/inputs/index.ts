@@ -1,4 +1,4 @@
 import Button from "./Button";
-import InputText from "./InputText";
+import TextInput from "./TextInput";
 
-export { Button, InputText };
+export { Button, TextInput };

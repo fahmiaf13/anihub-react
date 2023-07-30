@@ -1,5 +1,6 @@
 import React, { ButtonHTMLAttributes } from "react";
 import { SerializedStyles, css, useTheme } from "@emotion/react";
+import { Typography } from "..";
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   children: React.ReactNode;
@@ -20,6 +21,7 @@ const Button: React.FC<IButtonProps> = ({ sx, onClick, children, fullWidth, vari
         border: none;
         cursor: pointer;
         outline: none;
+        border-radius: 10px;
         width: ${fullWidth && "100%"};
         transition: background-color 0.3s ease;
 
@@ -55,7 +57,7 @@ const Button: React.FC<IButtonProps> = ({ sx, onClick, children, fullWidth, vari
       `}
       onClick={onClick}
     >
-      {children}
+      <Typography>{children}</Typography>
     </button>
   );
 };

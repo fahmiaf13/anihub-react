@@ -4,5 +4,6 @@ import Pagination from "./Pagination";
 import Loading from "./Loading";
 import Error from "./Error";
 import Modal from "./Modal";
+import Tabs from "./Tabs";
 
-export { Card, Loading, Carousel, Pagination, Error, Modal };
+export { Tabs, Card, Loading, Carousel, Pagination, Error, Modal };

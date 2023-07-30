@@ -1,7 +1,6 @@
-// components/Tab.tsx
 import React, { useState, ReactNode } from "react";
 import { css, useTheme } from "@emotion/react";
-import { Stack } from ".";
+import { Stack } from "../atoms";
 
 interface TabProps {
   children: ReactNode;
@@ -40,14 +39,13 @@ const Tab: React.FC<TabProps> & { Panel: React.FC<TabPanelProps> } = ({ children
             key={index}
             css={css`
               all: unset;
-              background: ${theme.colors.secondary + "40"};
               width: 100%;
               border-radius: 10px;
               padding: 10px;
               cursor: pointer;
               text-align: center;
               &:hover {
-                background: ${theme.colors.secondary + "20"};
+                background: ${theme.colors.secondary + "15"};
               }
               ${index === activeTab &&
               css`

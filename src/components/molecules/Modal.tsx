@@ -30,7 +30,7 @@ const Modal: React.FC<IModalProps> = ({ isOpen, onClose, children }) => {
         css={css`
           background: white;
           padding: 20px;
-          border-radius: 4px;
+          border-radius: 20px;
           position: relative;
         `}
         onClick={(e) => e.stopPropagation()}

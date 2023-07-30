@@ -1,4 +1,3 @@
-// context/CollectionContext.tsx
 import React, { createContext, useState, useEffect } from "react";
 
 export interface ICollection {
@@ -22,7 +21,7 @@ export interface IGroup {
 interface CollectionContextValue {
   groups: IGroup[];
   addToGroup: (collection: ICollection, groupId: number) => void;
-  createNewGroup: (groupName: string, collection: ICollection) => void;
+  createNewGroup: (groupName: string, collection: ICollection[]) => void;
 }
 
 export const CollectionContext = createContext<CollectionContextValue>({
@@ -49,11 +48,11 @@ const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
     setGroups((prevGroups) => prevGroups.map((group) => (group.id === groupId ? { ...group, collections: [...group.collections, collection] } : group)));
   };
 
-  const createNewGroup = (groupName: string, collection: ICollection) => {
+  const createNewGroup = (groupName: string, collection: ICollection[]) => {
     const newGroup: IGroup = {
       id: groups.length + 1,
       name: groupName,
-      collections: [collection],
+      collections: collection,
     };
 
     setGroups((prevGroups) => {

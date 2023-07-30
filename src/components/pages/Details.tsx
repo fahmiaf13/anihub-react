@@ -4,9 +4,9 @@ import { Template } from "@/components/templates";
 import { Loading, Error, Carousel } from "@/components/molecules";
 import { Box, Container, Stack, Typography } from "@/components/atoms";
 import { css, useTheme } from "@emotion/react";
-import { ICollection, CollectionContext } from "@/context/CollectionContext";
-import { useContext, useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
+// import { ICollection, CollectionContext } from "@/context/CollectionContext";
+// import { useContext, useEffect, useState } from "react";
+// import { Icon } from "@iconify/react";
 
 type CharactersType = {
   image: {
@@ -69,8 +69,8 @@ const GET_DETAIL_ANIME = gql`
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
-  const { addToCollection, bookmarkedCollections, removeFromCollection } = useContext(CollectionContext);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  // const { addToCollection, bookmarkedCollections, removeFromCollection } = useContext(CollectionContext);
+  // const [isBookmarked, setIsBookmarked] = useState(false);
   const { loading, error, data } = useQuery<GetDetailAnime>(GET_DETAIL_ANIME, {
     variables: { id },
   });
@@ -78,30 +78,30 @@ const Details = () => {
   const medias = data?.Media;
   const characters: CharactersType[] = data?.Media?.characters?.nodes ?? [];
 
-  const collectionPayload: ICollection = {
-    id: medias?.id ?? 0,
-    title: {
-      english: medias?.title?.english ?? "",
-      romaji: medias?.title?.romaji ?? "",
-      native: medias?.title?.native ?? "",
-    },
-    coverImage: {
-      large: medias?.coverImage?.large ?? "",
-    },
-  };
+  // const collectionPayload: ICollection = {
+  //   id: medias?.id ?? 0,
+  //   title: {
+  //     english: medias?.title?.english ?? "",
+  //     romaji: medias?.title?.romaji ?? "",
+  //     native: medias?.title?.native ?? "",
+  //   },
+  //   coverImage: {
+  //     large: medias?.coverImage?.large ?? "",
+  //   },
+  // };
 
-  useEffect(() => {
-    const isCollectionBookmarked = bookmarkedCollections.some((c) => c.id === medias?.id);
-    setIsBookmarked(isCollectionBookmarked);
-  }, [bookmarkedCollections, medias?.id]);
+  // useEffect(() => {
+  //   const isCollectionBookmarked = bookmarkedCollections.some((c) => c.id === medias?.id);
+  //   setIsBookmarked(isCollectionBookmarked);
+  // }, [bookmarkedCollections, medias?.id]);
 
-  const handleToggleBookmark = () => {
-    if (isBookmarked) {
-      removeFromCollection(collectionPayload);
-    } else {
-      addToCollection(collectionPayload);
-    }
-  };
+  // const handleToggleBookmark = () => {
+  //   if (isBookmarked) {
+  //     removeFromCollection(collectionPayload);
+  //   } else {
+  //     addToCollection(collectionPayload);
+  //   }
+  // };
 
   if (loading) return <Loading />;
   if (error) return <Error />;
@@ -184,7 +184,7 @@ const Details = () => {
                     css={css`
                       all: unset;
                       cursor: pointer;
-                      background-color: ${isBookmarked ? theme.colors.danger : theme.colors.primary};
+
                       display: flex;
                       align-items: center;
                       padding: 6px 10px;
@@ -193,9 +193,9 @@ const Details = () => {
                       color: ${theme.colors.secondary};
                       transition: all 0.3s ease-in-out;
                     `}
-                    onClick={handleToggleBookmark}
+                    // onClick={handleToggleBookmark}
                   >
-                    {isBookmarked ? (
+                    {/* {isBookmarked ? (
                       <>
                         <Icon icon="mdi:bookmark" width={28} color={theme.colors.secondary} />
                         <span>Already bookmarked</span>
@@ -205,7 +205,7 @@ const Details = () => {
                         <Icon icon="mdi:bookmark-plus-outline" width={28} color={theme.colors.secondary} />
                         <span>Add to bookmark</span>
                       </>
-                    )}
+                    )} */}
                     {/* <Icon icon={isBookmarked ? "mdi:bookmark" : "mdi:bookmark-plus-outline"} width={24} color={theme.colors.danger} /> */}
                   </button>
                   <Typography font="mont" weight={800} size="4xl">

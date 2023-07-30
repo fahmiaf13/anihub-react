@@ -6,8 +6,7 @@ interface ITemplateProps {
   children: React.ReactNode;
 }
 
-const Template = (props: ITemplateProps) => {
-  const { title, children } = props;
+const Template: React.FC<ITemplateProps> = ({ title, children }) => {
   return (
     <>
       <Helmet>

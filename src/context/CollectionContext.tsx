@@ -1,3 +1,4 @@
+// context/CollectionContext.tsx
 import React, { createContext, useState, useEffect } from "react";
 
 export interface ICollection {
@@ -12,16 +13,22 @@ export interface ICollection {
   };
 }
 
+export interface IGroup {
+  id: number;
+  name: string;
+  collections: ICollection[];
+}
+
 interface CollectionContextValue {
-  bookmarkedCollections: ICollection[];
-  addToCollection: (collection: ICollection) => void;
-  removeFromCollection: (collection: ICollection) => void;
+  groups: IGroup[];
+  addToGroup: (collection: ICollection, groupId: number) => void;
+  createNewGroup: (groupName: string, collection: ICollection) => void;
 }
 
 export const CollectionContext = createContext<CollectionContextValue>({
-  bookmarkedCollections: [],
-  addToCollection: () => {},
-  removeFromCollection: () => {},
+  groups: [],
+  addToGroup: () => {},
+  createNewGroup: () => {},
 });
 
 interface ICollectionProvider {
@@ -29,30 +36,44 @@ interface ICollectionProvider {
 }
 
 const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
-  const [bookmarkedCollections, setBookmarkedCollections] = useState<ICollection[]>(() => {
-    const storedCollections = localStorage.getItem("bookmarkedCollections");
-    return storedCollections ? JSON.parse(storedCollections) : [];
+  const [groups, setGroups] = useState<IGroup[]>(() => {
+    const storedGroups = localStorage.getItem("groups");
+    return storedGroups ? JSON.parse(storedGroups) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem("bookmarkedCollections", JSON.stringify(bookmarkedCollections));
-  }, [bookmarkedCollections]);
+    localStorage.setItem("groups", JSON.stringify(groups));
+  }, [groups]);
 
-  const addToCollection = (collection: ICollection) => {
-    setBookmarkedCollections((prevCollections) => {
-      const collectionIds = prevCollections.map((c) => c.id);
-      if (!collectionIds.includes(collection.id)) {
-        return [...prevCollections, collection];
-      }
-      return prevCollections;
+  const addToGroup = (collection: ICollection, groupId: number) => {
+    setGroups((prevGroups) => prevGroups.map((group) => (group.id === groupId ? { ...group, collections: [...group.collections, collection] } : group)));
+  };
+
+  const createNewGroup = (groupName: string, collection: ICollection) => {
+    const newGroup: IGroup = {
+      id: groups.length + 1,
+      name: groupName,
+      collections: [collection],
+    };
+
+    setGroups((prevGroups) => {
+      const updatedGroups = [...prevGroups, newGroup];
+      localStorage.setItem("groups", JSON.stringify(updatedGroups));
+      return updatedGroups;
     });
   };
 
-  const removeFromCollection = (collection: ICollection) => {
-    setBookmarkedCollections((prevCollections) => prevCollections.filter((c) => c.id !== collection.id));
-  };
-
-  return <CollectionContext.Provider value={{ bookmarkedCollections, addToCollection, removeFromCollection }}>{children}</CollectionContext.Provider>;
+  return (
+    <CollectionContext.Provider
+      value={{
+        groups,
+        addToGroup,
+        createNewGroup,
+      }}
+    >
+      {children}
+    </CollectionContext.Provider>
+  );
 };
 
 export { CollectionProvider };

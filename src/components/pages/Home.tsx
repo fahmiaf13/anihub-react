@@ -8,10 +8,9 @@ import { Card, Carousel, Loading, Modal, Pagination } from "@/components/molecul
 import { heroImg } from "@/assets/images/hero/image";
 import { css, useTheme } from "@emotion/react";
 import { Link } from "react-router-dom";
-import { CollectionContext } from "@/context/CollectionContext";
+import { CollectionContext, ICollection, IGroup } from "@/context/CollectionContext";
 import { useContext, useState } from "react";
 import { Icon } from "@iconify/react";
-// import { Tab, Tabs } from "../atoms/tabs";
 import Tab from "../atoms/Tabs";
 
 type GetListAnimeData = {
@@ -66,9 +65,11 @@ const Home = () => {
   const theme = useTheme();
   const [page, setPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [groupName, setGroupName] = useState<string>("");
+
   const { loading, data, error } = useQuery<GetListAnimeData>(GET_LIST_ANIME, { variables: { page, perPage: 10 } });
-  const { addToCollection, bookmarkedCollections, removeFromCollection } = useContext(CollectionContext);
+  const { groups, addToGroup, createNewGroup } = useContext(CollectionContext);
+  const [selectedCollection, setSelectedCollection] = useState<ICollection | null>(null);
+  const [groupName, setGroupName] = useState<string>("");
 
   // const handleAddToExistingGroup = (group: Collection) => {
   //   addToCollection({ ...selectedCollection, group: group.title.english });
@@ -82,6 +83,26 @@ const Home = () => {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleCardClick = (media: ICollection) => {
+    setSelectedCollection(media);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedCollection(null);
+    setIsModalOpen(false);
+  };
+
+  const handleAddToExistingGroup = (group: IGroup) => {
+    addToGroup(selectedCollection!, group.id);
+    closeModal();
+  };
+
+  const handleAddToNewGroup = () => {
+    createNewGroup(groupName, selectedCollection!);
+    closeModal();
   };
 
   const animatedText = css`
@@ -177,122 +198,120 @@ const Home = () => {
             </Typography>
             <Stack align="center">
               <Grid container lg={10} spacing={12} direction="row">
-                {medias?.map((media, index) => {
-                  const isBookmarked = bookmarkedCollections.some((c) => c.id == media.id);
-                  const handleBookmarkClick = () => {
-                    if (isBookmarked) {
-                      removeFromCollection({
-                        id: media?.id,
-                        title: media?.title,
-                        coverImage: media?.coverImage,
-                      });
-                    } else {
-                      addToCollection({
-                        id: media?.id,
-                        title: media?.title,
-                        coverImage: media?.coverImage,
-                      });
-                    }
-                  };
-                  return (
-                    <Card
-                      key={index}
+                {medias?.map((media, index) => (
+                  <Card
+                    key={index}
+                    sx={css`
+                      position: relative;
+                    `}
+                  >
+                    <Stack
+                      direction="column"
                       sx={css`
-                        position: relative;
+                        padding: 0.3rem;
                       `}
                     >
-                      <Stack
-                        direction="column"
-                        sx={css`
-                          padding: 0.3rem;
-                        `}
-                      >
-                        <div style={{ height: "200px" }}>
-                          <img style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "17px" }} src={media.coverImage.large} alt={`test`} />
-                        </div>
-                        <Stack>
-                          <Typography size="base" align="center" weight={800}>
-                            {media.title.english || media.title.romaji || media.title.native}
-                          </Typography>
-                          <Stack justify="flex-end">
-                            <Link to={`/details/${media.id}`}>
-                              <Button variant="secondary" fullWidth style={{ borderRadius: "10px" }}>
-                                <Typography align="center" size="sm" weight={500}>
-                                  See More
-                                </Typography>
-                              </Button>
-                            </Link>
-                          </Stack>
+                      <div style={{ height: "200px" }}>
+                        <img style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "17px" }} src={media.coverImage.large} alt={`test`} />
+                      </div>
+                      <Stack>
+                        <Typography size="base" align="center" weight={800}>
+                          {media.title.english || media.title.romaji || media.title.native}
+                        </Typography>
+                        <Stack justify="flex-end">
+                          <Link to={`/details/${media.id}`}>
+                            <Button variant="secondary" fullWidth style={{ borderRadius: "10px" }}>
+                              <Typography align="center" size="sm" weight={500}>
+                                See More
+                              </Typography>
+                            </Button>
+                          </Link>
                         </Stack>
                       </Stack>
-                      <button
-                        css={css`
-                          all: unset;
-                          cursor: pointer;
-                          position: absolute;
-                          top: 20px;
-                          right: 20px;
-                          background-color: ${theme.colors.primary};
-                          display: flex;
-                          align-items: center;
-                          padding: 5px;
-                          border-radius: 100%;
-                        `}
-                        onClick={handleBookmarkClick}
-                      >
-                        <Icon icon={isBookmarked ? "mdi:bookmark" : "mdi:bookmark-plus-outline"} width={24} color={theme.colors.danger} />
-                      </button>
-                    </Card>
-                  );
-                })}
+                    </Stack>
+                    <button
+                      css={css`
+                        all: unset;
+                        cursor: pointer;
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        background-color: ${theme.colors.primary};
+                        display: flex;
+                        align-items: center;
+                        padding: 5px;
+                        border-radius: 100%;
+                      `}
+                      onClick={() => handleCardClick(media)}
+                    >
+                      <Icon icon={"mdi:bookmark"} width={24} color={theme.colors.danger} />
+                    </button>
+                    <button
+                      css={css`
+                        all: unset;
+                        cursor: pointer;
+                        position: absolute;
+                        bottom: 20px;
+                        right: 20px;
+                        background-color: ${theme.colors.primary};
+                        display: flex;
+                        align-items: center;
+                        padding: 5px;
+                        border-radius: 100%;
+                      `}
+                      onClick={() => handleCardClick(media)}
+                    >
+                      <Icon icon="mdi:plus-circle" width={24} color={theme.colors.danger} />
+                    </button>
+                  </Card>
+                ))}
               </Grid>
-              <button onClick={() => setIsModalOpen(true)}>open modal</button>
-              {/* MODAL COMPONENT */}
-              <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <Typography weight={800} size="3xl">
-                  Collection
-                </Typography>
-                <div
-                  css={css`
-                    width: 500px;
-                    height: 500px;
-                  `}
-                >
-                  <Tab>
-                    <Tab.Panel label="Add to collection">
-                      <Typography>Add to collection</Typography>
-                    </Tab.Panel>
-                    <Tab.Panel label="Create a new collection">
-                      <Typography>Create a new collection</Typography>
-                      <input type="text" placeholder="group name" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
-                      <Stack direction="row">
-                        <Button
-                          fullWidth
-                          sx={css`
-                            border-radius: 10px;
-                          `}
-                        >
-                          <Typography align="center">Batal</Typography>
-                        </Button>
-                        <Button
-                          sx={css`
-                            border-radius: 10px;
-                          `}
-                          fullWidth
-                        >
-                          <Typography align="center">Buat</Typography>
-                        </Button>
-                      </Stack>
-                    </Tab.Panel>
-                  </Tab>
-                </div>
-              </Modal>
-              {/* ================ */}
               {pageInfo && <Pagination pageInfo={pageInfo} onPageChange={handlePageChange} />}
             </Stack>
           </Container>
         </Container>
       </section>
+
+      {/* MODAL COMPONENT */}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Typography weight={800} size="3xl">
+          Collection
+        </Typography>
+        <div
+          css={css`
+            width: 500px;
+            height: 500px;
+          `}
+        >
+          <Tab>
+            <Tab.Panel label="Add to collection">
+              <Typography>Add to collection</Typography>
+            </Tab.Panel>
+            <Tab.Panel label="Create a new collection">
+              <Typography>Create a new collection</Typography>
+              <input type="text" placeholder="group name" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
+              <Stack direction="row">
+                <Button fullWidth onClick={() => setIsModalOpen(false)}>
+                  <Typography align="center">Cancel</Typography>
+                </Button>
+                <Button fullWidth onClick={handleAddToNewGroup}>
+                  <Typography align="center">Create New Group</Typography>
+                </Button>
+              </Stack>
+            </Tab.Panel>
+          </Tab>
+        </div>
+        {/* Render list of existing groups */}
+        <Stack>
+          {groups.map((group) => (
+            <Button fullWidth key={group.id} onClick={() => handleAddToExistingGroup(group)}>
+              <Typography align="center">{group.name}</Typography>
+            </Button>
+          ))}
+        </Stack>
+      </Modal>
+
+      {/* Modal test */}
     </Template>
   );
 };

@@ -14,6 +14,7 @@ import { CollectionContext, ICollection } from "@/context/CollectionContext";
 import { useContext, useState } from "react";
 import { Icon } from "@iconify/react";
 import { TextInput } from "@/components/atoms/inputs";
+import { Error } from "@/components/molecules";
 
 type GetListAnimeData = {
   Page: {
@@ -141,7 +142,7 @@ const Home = () => {
   `;
 
   if (loading) return <Loading />;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) return <Error />;
   const medias = data?.Page.media;
   const pageInfo = data?.Page?.pageInfo;
 

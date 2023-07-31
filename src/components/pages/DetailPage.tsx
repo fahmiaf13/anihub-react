@@ -7,9 +7,6 @@ import { css, useTheme } from "@emotion/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useContext, useState } from "react";
 import { ICollection, CollectionContext } from "@/context/CollectionContext";
-// import { ICollection, CollectionContext } from "@/context/CollectionContext";
-// import { useContext, useEffect, useState } from "react";
-// import { Icon } from "@iconify/react";
 
 type CharactersType = {
   image: {

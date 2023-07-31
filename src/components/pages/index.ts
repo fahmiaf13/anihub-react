@@ -1,5 +1,5 @@
 import Collection from "./Collection";
 import Home from "./Home";
-import Details from "./Details";
+import DetailPage from "./DetailPage";
 
-export { Home, Collection, Details };
+export { Home, Collection, DetailPage };

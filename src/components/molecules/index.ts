@@ -5,5 +5,5 @@ import Loading from "./Loading";
 import Error from "./Error";
 import Modal from "./Modal";
 import Tabs from "./Tabs";
-
-export { Tabs, Card, Loading, Carousel, Pagination, Error, Modal };
+import Toast from "./Toast";
+export { Toast, Tabs, Card, Loading, Carousel, Pagination, Error, Modal };

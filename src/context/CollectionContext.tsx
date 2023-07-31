@@ -22,12 +22,16 @@ interface CollectionContextValue {
   groups: IGroup[];
   addToGroup: (collection: ICollection, groupId: number) => void;
   createNewGroup: (groupName: string, collection: ICollection[]) => void;
+  renameGroup: (groupId: number, newName: string) => void;
+  deleteGroup: (groupId: number) => void;
 }
 
 export const CollectionContext = createContext<CollectionContextValue>({
   groups: [],
   addToGroup: () => {},
   createNewGroup: () => {},
+  renameGroup: () => {},
+  deleteGroup: () => {},
 });
 
 interface ICollectionProvider {
@@ -62,12 +66,22 @@ const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
     });
   };
 
+  const renameGroup = (groupId: number, newName: string) => {
+    setGroups((prevGroups) => prevGroups.map((group) => (group.id === groupId ? { ...group, name: newName } : group)));
+  };
+
+  const deleteGroup = (groupId: number) => {
+    setGroups((prevGroups) => prevGroups.filter((group) => group.id !== groupId));
+  };
+
   return (
     <CollectionContext.Provider
       value={{
         groups,
         addToGroup,
         createNewGroup,
+        renameGroup,
+        deleteGroup,
       }}
     >
       {children}

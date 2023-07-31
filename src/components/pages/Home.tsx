@@ -3,7 +3,9 @@ import { useQuery, gql } from "@apollo/client";
 import { Container, Grid, Stack } from "@/components/atoms/layouts";
 import { Button, Typography } from "@/components/atoms";
 import { Template } from "@/components/templates";
-import { Card, Carousel, Loading, Modal, Pagination, Tabs } from "@/components/molecules";
+import { Card, Carousel, Loading, Modal, Pagination, Tabs, Toast } from "@/components/molecules";
+import EmptyIcon from "@/assets/images/empty.json";
+import Lottie from "lottie-react";
 // IMAGE
 import { heroImg } from "@/assets/images/hero/image";
 import { css, useTheme } from "@emotion/react";
@@ -68,19 +70,17 @@ const Home = () => {
   const { loading, data, error } = useQuery<GetListAnimeData>(GET_LIST_ANIME, { variables: { page, perPage: 10 } });
   const { groups, addToGroup, createNewGroup } = useContext(CollectionContext);
   const [groupName, setGroupName] = useState<string>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
   const [selectedCards, setSelectedCards] = useState<ICollection[]>([]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
   const closeModal = () => {
     setSelectedCards([]);
     setIsModalOpen(false);
+    setShowToast(false);
   };
 
   const handleGroupNameChange = (value: string) => {
@@ -88,6 +88,7 @@ const Home = () => {
   };
 
   const handleCardSelect = (media: ICollection) => {
+    setIsModalOpen(true);
     setSelectedCards((prevSelected) => {
       if (prevSelected.includes(media)) {
         return prevSelected.filter((item) => item.id !== media.id);
@@ -108,14 +109,17 @@ const Home = () => {
     if (groupName.trim() !== "") {
       const isDuplicateName = groups.some((group) => group.name === groupName);
       if (!isDuplicateName) {
-        createNewGroup(groupName, selectedCards);
-
-        setGroupName("");
-        setSelectedCards([]);
-
-        closeModal();
+        if (selectedCards.length > 0) {
+          createNewGroup(groupName, selectedCards);
+          setShowToast(true);
+          setGroupName("");
+          setSelectedCards([]);
+          closeModal();
+        } else {
+          alert("No item selected");
+        }
       } else {
-        alert("Group name must be unique.");
+        alert("Group name already exists");
       }
     } else {
       alert("Group name cannot be empty.");
@@ -137,7 +141,7 @@ const Home = () => {
   if (error) return <p>Error: {error.message}</p>;
   const medias = data?.Page.media;
   const pageInfo = data?.Page?.pageInfo;
-  console.log(selectedCards);
+
   return (
     <Template>
       <section style={{ height: "100vh", width: "100%" }}>
@@ -260,7 +264,8 @@ const Home = () => {
                         padding: 5px;
                         border-radius: 20%;
                       `}
-                      onClick={openModal}
+                      // onClick={() => openModal(media)}
+                      onClick={() => handleCardSelect(media)}
                     >
                       <Icon icon={"mdi:bookmark"} width={24} color={theme.colors.danger} />
                     </button>
@@ -332,16 +337,51 @@ const Home = () => {
           >
             <Tabs>
               <Tabs.Panel label="Add to collection">
-                <Typography>Add to collection</Typography>
-                {groups.map((group, index) => (
-                  <div key={index}>
-                    <Button onClick={() => handleMultipleAddToGroup(group.id)}>{group.name}</Button>
-                  </div>
-                ))}
+                <Grid
+                  sx={css`
+                    margin-top: 1.5rem;
+                  `}
+                  container
+                  spacing={10}
+                  sm={12}
+                  direction="row"
+                >
+                  {groups.length === 0 ? (
+                    <Stack
+                      justify="center"
+                      align="center"
+                      sx={css`
+                        width: 100%;
+                        height: 100%;
+                      `}
+                    >
+                      <Lottie animationData={EmptyIcon} style={{ height: 200, width: 200 }}></Lottie>
+                      <Typography align="center" weight={600}>
+                        Collection empty
+                      </Typography>
+                    </Stack>
+                  ) : (
+                    groups.map((group, index) => (
+                      <Button key={index} onClick={() => handleMultipleAddToGroup(group.id)}>
+                        <Stack direction="row" align="center">
+                          <Icon icon="heroicons:folder-20-solid" />
+                          <span>{group.name}</span>
+                        </Stack>
+                      </Button>
+                    ))
+                  )}
+                </Grid>
               </Tabs.Panel>
               <Tabs.Panel label="Create a new collection">
-                <Typography>Create a new collection</Typography>
-                <TextInput placeholder="group name" value={groupName} onChange={handleGroupNameChange} />
+                <Stack
+                  sx={css`
+                    margin-block: 1rem;
+                  `}
+                >
+                  <Typography weight={300}>Insert group name</Typography>
+
+                  <TextInput placeholder="group name" value={groupName} onChange={handleGroupNameChange} />
+                </Stack>
                 <Stack direction="row">
                   <Button fullWidth onClick={() => setIsModalOpen(false)}>
                     <Typography align="center">Cancel</Typography>
@@ -355,6 +395,7 @@ const Home = () => {
           </div>
         </Stack>
       </Modal>
+      {showToast && <Toast message="Successfully added new group" />}
     </Template>
   );
 };

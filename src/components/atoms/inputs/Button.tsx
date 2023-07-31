@@ -57,7 +57,7 @@ const Button: React.FC<IButtonProps> = ({ sx, onClick, children, fullWidth, vari
       `}
       onClick={onClick}
     >
-      <Typography>{children}</Typography>
+      <Typography align="center">{children}</Typography>
     </button>
   );
 };

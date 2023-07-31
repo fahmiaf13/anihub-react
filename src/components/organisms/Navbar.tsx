@@ -99,7 +99,7 @@ const Navbar = () => {
             `}
             direction="row"
           >
-            <Link to="/collection/1">
+            <Link to="/collection">
               <Icon icon="bi:bookmark-heart-fill" width={24} color={theme.colors.danger} />
             </Link>
           </Stack>

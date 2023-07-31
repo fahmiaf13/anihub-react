@@ -105,22 +105,27 @@ const Home = () => {
   };
 
   const handleMultipleAddToNewGroup = () => {
-    if (groupName.trim() !== "") {
-      const isDuplicateName = groups.some((group) => group.name === groupName);
-      if (!isDuplicateName) {
-        if (selectedCards.length > 0) {
-          createNewGroup(groupName, selectedCards);
-          setGroupName("");
-          setSelectedCards([]);
-          closeModal();
+    const validateSpecialChar = /^[a-zA-Z0-9_]+$/;
+    if (validateSpecialChar.test(groupName)) {
+      if (groupName.trim() !== "") {
+        const isDuplicateName = groups.some((group) => group.name === groupName);
+        if (!isDuplicateName) {
+          if (selectedCards.length > 0) {
+            createNewGroup(groupName, selectedCards);
+            setGroupName("");
+            setSelectedCards([]);
+            closeModal();
+          } else {
+            alert("No item selected");
+          }
         } else {
-          alert("No item selected");
+          alert("Group name already exists");
         }
       } else {
-        alert("Group name already exists");
+        alert("Group name cannot be empty field");
       }
     } else {
-      alert("Group name cannot be empty.");
+      alert("Group name contains special characters");
     }
   };
 

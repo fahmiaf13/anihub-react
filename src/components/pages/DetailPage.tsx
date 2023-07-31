@@ -110,12 +110,26 @@ const Details = () => {
     selectedItem.forEach((collection) => {
       addToGroup(collection, groupId);
     });
+    handleCloseCollectionModal();
   };
 
   const handleCreateNewGroup = () => {
-    if (groupName.trim() !== "" && selectedItem.length > 0) {
-      createNewGroup(groupName, selectedItem);
-      setGroupName("");
+    const validateSpecialChar = /^[a-zA-Z0-9_]+$/;
+    const isDuplicateName = groups.some((group) => group.name === groupName);
+    if (validateSpecialChar.test(groupName)) {
+      if (!isDuplicateName) {
+        if (groupName.trim() !== "" && selectedItem.length > 0) {
+          createNewGroup(groupName, selectedItem);
+          setGroupName("");
+          handleCloseCollectionModal();
+        } else {
+          alert("Group name cannot be empty");
+        }
+      } else {
+        alert("Group name already exists");
+      }
+    } else {
+      alert("Group name contains special characters");
     }
   };
 

@@ -49,10 +49,23 @@ const DetailCollection = () => {
   };
 
   const handleRenameGroup = () => {
-    renameGroup(thisGroup?.id ?? 0, newName);
-    handleCloseEditModal();
+    const validateSpecialChar = /^[a-zA-Z0-9_]+$/;
+    const isDuplicateName = groups.some((group) => group.name === newName);
+    if (validateSpecialChar.test(newName)) {
+      if (!isDuplicateName) {
+        if (newName.trim() !== "") {
+          renameGroup(thisGroup?.id ?? 0, newName);
+          handleCloseEditModal();
+        } else {
+          alert("Group name cannot be empty field");
+        }
+      } else {
+        alert("Group name already exists");
+      }
+    } else {
+      alert("Group name contains special characters");
+    }
   };
-
   return (
     <Template title={thisGroup?.name}>
       <section
@@ -150,7 +163,9 @@ const DetailCollection = () => {
               <Button fullWidth onClick={() => handleRemoveFromGroup()}>
                 Yes
               </Button>
-              <Button fullWidth>No</Button>
+              <Button fullWidth onClick={() => handleCloseRemoveModal()}>
+                No
+              </Button>
             </Stack>
           </Modal>
 
@@ -167,7 +182,7 @@ const DetailCollection = () => {
               <Stack>
                 <TextInput placeholder="new collection name" value={newName} onChange={handleChangeCollectionName} />
                 <Button onClick={() => handleRenameGroup()}>Change</Button>
-                <Button>Cancel</Button>
+                <Button onClick={() => handleCloseEditModal()}>Cancel</Button>
               </Stack>
             </Stack>
           </Modal>

@@ -24,6 +24,7 @@ interface CollectionContextValue {
   createNewGroup: (groupName: string, collection: ICollection[]) => void;
   renameGroup: (groupId: number, newName: string) => void;
   deleteGroup: (groupId: number) => void;
+  removeFromGroup: (collectionId: number, groupId: number) => void;
 }
 
 export const CollectionContext = createContext<CollectionContextValue>({
@@ -32,6 +33,7 @@ export const CollectionContext = createContext<CollectionContextValue>({
   createNewGroup: () => {},
   renameGroup: () => {},
   deleteGroup: () => {},
+  removeFromGroup: () => {},
 });
 
 interface ICollectionProvider {
@@ -49,7 +51,16 @@ const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
   }, [groups]);
 
   const addToGroup = (collection: ICollection, groupId: number) => {
-    setGroups((prevGroups) => prevGroups.map((group) => (group.id === groupId ? { ...group, collections: [...group.collections, collection] } : group)));
+    setGroups((prevGroups) =>
+      prevGroups.map((group) =>
+        group.id === groupId
+          ? {
+              ...group,
+              collections: group.collections.some((col) => col.id === collection.id) ? group.collections.map((col) => (col.id === collection.id ? { ...col, ...collection } : col)) : [...group.collections, collection],
+            }
+          : group
+      )
+    );
   };
 
   const createNewGroup = (groupName: string, collection: ICollection[]) => {
@@ -74,6 +85,19 @@ const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
     setGroups((prevGroups) => prevGroups.filter((group) => group.id !== groupId));
   };
 
+  const removeFromGroup = (collectionId: number, groupId: number) => {
+    setGroups((prevGroups) =>
+      prevGroups.map((group) =>
+        group.id === groupId
+          ? {
+              ...group,
+              collections: group.collections.filter((collection) => collection.id !== collectionId),
+            }
+          : group
+      )
+    );
+  };
+
   return (
     <CollectionContext.Provider
       value={{
@@ -82,6 +106,7 @@ const CollectionProvider: React.FC<ICollectionProvider> = ({ children }) => {
         createNewGroup,
         renameGroup,
         deleteGroup,
+        removeFromGroup,
       }}
     >
       {children}

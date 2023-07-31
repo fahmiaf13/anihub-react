@@ -17,16 +17,12 @@ export default function Router() {
       path: "/collection",
       children: [
         { index: true, element: <Collection /> },
-        { path: "/collection/:name", element: <DetailCollection /> },
+        { path: "/collection/:id", element: <DetailCollection /> },
       ],
     },
     {
       path: "/details/:id",
       element: <DetailPage />,
-    },
-    {
-      path: "/collection/:name",
-      element: <DetailCollection />,
     },
     {
       path: "*",

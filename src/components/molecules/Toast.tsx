@@ -1,39 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { css } from "@emotion/react";
+import React, { useEffect } from "react";
+import { css, keyframes } from "@emotion/react";
 
-interface IToastProps {
+interface ToastProps {
   message: string;
-  duration?: number;
+  duration: number;
+  onClose: () => void;
 }
 
-const toastStyles = css`
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 4px;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s;
+const slideUp = keyframes`
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 `;
 
-const Toast: React.FC<IToastProps> = ({ message, duration = 3000 }) => {
-  const [visible, setVisible] = useState(false);
-
+const Toast: React.FC<ToastProps> = ({ message, duration, onClose }) => {
   useEffect(() => {
-    setVisible(true);
     const timer = setTimeout(() => {
-      setVisible(false);
+      onClose();
     }, duration);
 
-    return () => clearTimeout(timer);
-  }, [duration]);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [duration, onClose]);
 
   return (
-    <div css={toastStyles} style={{ opacity: visible ? 1 : 0 }}>
+    <div
+      css={css`
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        animation: ${slideUp} 0.3s ease;
+      `}
+    >
       {message}
     </div>
   );

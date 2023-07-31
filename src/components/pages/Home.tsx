@@ -3,7 +3,7 @@ import { useQuery, gql } from "@apollo/client";
 import { Container, Grid, Stack } from "@/components/atoms/layouts";
 import { Button, Typography } from "@/components/atoms";
 import { Template } from "@/components/templates";
-import { Card, Carousel, Loading, Modal, Pagination, Tabs, Toast } from "@/components/molecules";
+import { Card, Carousel, Loading, Modal, Pagination, Tabs } from "@/components/molecules";
 import EmptyIcon from "@/assets/images/empty.json";
 import Lottie from "lottie-react";
 // IMAGE
@@ -70,7 +70,7 @@ const Home = () => {
   const { loading, data, error } = useQuery<GetListAnimeData>(GET_LIST_ANIME, { variables: { page, perPage: 10 } });
   const { groups, addToGroup, createNewGroup } = useContext(CollectionContext);
   const [groupName, setGroupName] = useState<string>("");
-  const [showToast, setShowToast] = useState<boolean>(false);
+
   const [selectedCards, setSelectedCards] = useState<ICollection[]>([]);
 
   const handlePageChange = (newPage: number) => {
@@ -80,7 +80,6 @@ const Home = () => {
   const closeModal = () => {
     setSelectedCards([]);
     setIsModalOpen(false);
-    setShowToast(false);
   };
 
   const handleGroupNameChange = (value: string) => {
@@ -111,7 +110,6 @@ const Home = () => {
       if (!isDuplicateName) {
         if (selectedCards.length > 0) {
           createNewGroup(groupName, selectedCards);
-          setShowToast(true);
           setGroupName("");
           setSelectedCards([]);
           closeModal();
@@ -395,7 +393,6 @@ const Home = () => {
           </div>
         </Stack>
       </Modal>
-      {showToast && <Toast message="Successfully added new group" />}
     </Template>
   );
 };

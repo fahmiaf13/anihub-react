@@ -108,7 +108,7 @@ export default function Collection() {
                       >
                         <Stack>
                           <Stack justify="flex-end">
-                            <Link to={`/collection/${group.name}`}>
+                            <Link to={`/collection/${group.id}`}>
                               <Typography
                                 sx={css`
                                   &:hover {

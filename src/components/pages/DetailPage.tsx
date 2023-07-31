@@ -1,9 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 import { Template } from "@/components/templates";
-import { Loading, Error, Carousel } from "@/components/molecules";
-import { Box, Container, Stack, Typography } from "@/components/atoms";
+import { Loading, Error, Carousel, Modal, Tabs } from "@/components/molecules";
+import { Box, Button, Container, Grid, Stack, TextInput, Typography } from "@/components/atoms";
 import { css, useTheme } from "@emotion/react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useContext, useState } from "react";
+import { ICollection, CollectionContext } from "@/context/CollectionContext";
 // import { ICollection, CollectionContext } from "@/context/CollectionContext";
 // import { useContext, useEffect, useState } from "react";
 // import { Icon } from "@iconify/react";
@@ -46,6 +49,9 @@ const GET_DETAIL_ANIME = gql`
         english
         native
       }
+      episodes
+      genres
+      averageScore
       description
       coverImage {
         large
@@ -69,39 +75,49 @@ const GET_DETAIL_ANIME = gql`
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
-  // const { addToCollection, bookmarkedCollections, removeFromCollection } = useContext(CollectionContext);
-  // const [isBookmarked, setIsBookmarked] = useState(false);
   const { loading, error, data } = useQuery<GetDetailAnime>(GET_DETAIL_ANIME, {
     variables: { id },
   });
+  const { groups, addToGroup, createNewGroup } = useContext(CollectionContext);
+  const [isModalCollection, setIsModalCollection] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<ICollection[]>([]);
+  const [groupName, setGroupName] = useState<string>("");
 
   const medias = data?.Media;
   const characters: CharactersType[] = data?.Media?.characters?.nodes ?? [];
 
-  // const collectionPayload: ICollection = {
-  //   id: medias?.id ?? 0,
-  //   title: {
-  //     english: medias?.title?.english ?? "",
-  //     romaji: medias?.title?.romaji ?? "",
-  //     native: medias?.title?.native ?? "",
-  //   },
-  //   coverImage: {
-  //     large: medias?.coverImage?.large ?? "",
-  //   },
-  // };
+  const media: ICollection = {
+    id: medias?.id ?? 0,
+    coverImage: medias?.coverImage ?? { large: "" },
+    title: medias?.title ?? { english: "", romaji: "", native: "" },
+  };
 
-  // useEffect(() => {
-  //   const isCollectionBookmarked = bookmarkedCollections.some((c) => c.id === medias?.id);
-  //   setIsBookmarked(isCollectionBookmarked);
-  // }, [bookmarkedCollections, medias?.id]);
+  const handleOpenCollectionModal = () => {
+    setIsModalCollection(true);
+    setSelectedItem([media]);
+  };
+  const handleCloseCollectionModal = () => {
+    setIsModalCollection(false);
+    setSelectedItem([]);
+    setGroupName("");
+  };
 
-  // const handleToggleBookmark = () => {
-  //   if (isBookmarked) {
-  //     removeFromCollection(collectionPayload);
-  //   } else {
-  //     addToCollection(collectionPayload);
-  //   }
-  // };
+  const handleGroupNameChange = (value: string) => {
+    setGroupName(value);
+  };
+
+  const addToCollection = (groupId: number) => {
+    selectedItem.forEach((collection) => {
+      addToGroup(collection, groupId);
+    });
+  };
+
+  const handleCreateNewGroup = () => {
+    if (groupName.trim() !== "" && selectedItem.length > 0) {
+      createNewGroup(groupName, selectedItem);
+      setGroupName("");
+    }
+  };
 
   if (loading) return <Loading />;
   if (error) return <Error />;
@@ -166,48 +182,42 @@ const Details = () => {
               `}
             >
               <Stack direction="row" spacing={30} align="center">
-                <img
-                  src={medias?.coverImage.extraLarge}
-                  css={css`
-                    border-radius: 17px;
-                    height: 400px;
+                <Stack
+                  justify="center"
+                  align="center"
+                  sx={css`
                     margin-left: 5rem;
+                    margin-top: 5rem;
                   `}
-                />
+                >
+                  <img
+                    src={medias?.coverImage.extraLarge}
+                    css={css`
+                      border-radius: 17px;
+                      height: 400px;
+                    `}
+                  />
+                  <Button onClick={() => handleOpenCollectionModal()} variant="primary">
+                    <Stack
+                      sx={css`
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: auto;
+                      `}
+                      direction="row"
+                    >
+                      <Icon icon="ic:round-bookmark" fontSize={24} />
+                      <span>Add to collection</span>
+                    </Stack>
+                  </Button>
+                </Stack>
                 <Box
                   sx={css`
                     padding-inline-end: 3rem;
                     width: 100%;
                   `}
                 >
-                  <button
-                    css={css`
-                      all: unset;
-                      cursor: pointer;
-
-                      display: flex;
-                      align-items: center;
-                      padding: 6px 10px;
-                      border-radius: 30px;
-                      gap: 0.3rem;
-                      color: ${theme.colors.secondary};
-                      transition: all 0.3s ease-in-out;
-                    `}
-                    // onClick={handleToggleBookmark}
-                  >
-                    {/* {isBookmarked ? (
-                      <>
-                        <Icon icon="mdi:bookmark" width={28} color={theme.colors.secondary} />
-                        <span>Already bookmarked</span>
-                      </>
-                    ) : (
-                      <>
-                        <Icon icon="mdi:bookmark-plus-outline" width={28} color={theme.colors.secondary} />
-                        <span>Add to bookmark</span>
-                      </>
-                    )} */}
-                    {/* <Icon icon={isBookmarked ? "mdi:bookmark" : "mdi:bookmark-plus-outline"} width={24} color={theme.colors.danger} /> */}
-                  </button>
                   <Typography font="mont" weight={800} size="4xl">
                     {medias?.title.english || medias?.title.romaji}
                   </Typography>
@@ -274,6 +284,81 @@ const Details = () => {
             </Carousel>
           </Stack>
         </Container>
+        <Modal isOpen={isModalCollection} onClose={handleCloseCollectionModal}>
+          <div
+            css={css`
+              width: 600px;
+              height: 650px;
+            `}
+          >
+            <Stack align="center">
+              <div
+                css={css`
+                  height: 400px;
+                `}
+              >
+                <img
+                  src={selectedItem[0]?.coverImage?.large}
+                  css={css`
+                    border-radius: 17px;
+                    height: 100%;
+                  `}
+                />
+              </div>
+              <Typography font="mont" weight={800} size="2xl">
+                {selectedItem[0]?.title?.english}
+              </Typography>
+              <Grid
+                sx={css`
+                  width: 100%;
+                `}
+              >
+                <Tabs>
+                  <Tabs.Panel label="Add to collection">
+                    <Grid
+                      sx={css`
+                        margin-top: 1.5rem;
+                      `}
+                      container
+                      spacing={10}
+                      sm={12}
+                      direction="row"
+                    >
+                      {groups.map((group, index) => (
+                        <Button key={index} onClick={() => addToCollection(group.id)}>
+                          <Stack direction="row" align="center">
+                            <Icon icon="heroicons:folder-20-solid" />
+                            <span>{group.name}</span>
+                          </Stack>
+                        </Button>
+                      ))}
+                    </Grid>
+                  </Tabs.Panel>
+                  <Tabs.Panel label="Create A New Collection">
+                    <Stack
+                      sx={css`
+                        margin-block: 1rem;
+                      `}
+                    >
+                      <TextInput placeholder="group name" value={groupName} onChange={handleGroupNameChange} />
+                    </Stack>
+                    <Stack
+                      direction="row"
+                      sx={css`
+                        margin-block: 1rem;
+                      `}
+                    >
+                      <Button fullWidth>Discard</Button>
+                      <Button fullWidth onClick={handleCreateNewGroup}>
+                        Create
+                      </Button>
+                    </Stack>
+                  </Tabs.Panel>
+                </Tabs>
+              </Grid>
+            </Stack>
+          </div>
+        </Modal>
       </section>
     </Template>
   );
